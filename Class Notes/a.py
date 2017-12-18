@@ -1,0 +1,8 @@
+f = open("number.txt", 'r')
+fileNumberList = f.read().splitlines()
+print('\n')
+print(fileNumberList)
+print('\n\n')
+fileNumberList.sort()
+print(fileNumberList)
+print('\n')
