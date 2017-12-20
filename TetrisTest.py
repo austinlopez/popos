@@ -13,7 +13,7 @@ BOARD_WIDTH = 12
 BOARD_HEIGHT = 20
 OUTLINE_BLOCKS = 1
 
-#BG_COLOR = [211,211,255]
+BG_COLOR = [211,211,255]
 
 
 CYAN = [0,255,255] # I Shape
@@ -72,6 +72,11 @@ class Block():
         self.y += dy
         #print('moving')
         #Rect.move(self, self.x*BLOCK_SIZE, self.y*BLOCK_SIZE)
+    
+    def changeColor(self,color,oulineColor=None):
+        self.color = color
+        if not oulineColor == None:
+            self.outlineColor = outlineColor
 
     def canMove(self, board, dx, dy):
         futureX = self.x + dx
@@ -205,14 +210,24 @@ class Game_Board():
         for y in range(0,BOARD_HEIGHT+2):
             if y == 0 or y == BOARD_HEIGHT + OUTLINE_BLOCKS:
                 for x in range(0,BOARD_WIDTH+2):
-                    self.border[(x,y)] = Block(randomColor(),[x,y])
+                    #self.border[(x,y)] = Block(randomColor(),[x,y])
                     #self.border[(x,y)] = Block([255,255,255],[x,y])
                     #self.border[(x,y)] = Block([0,0,0],[x,y],[255,255,255])
+                    pass
             else:
                 for x in [0,BOARD_WIDTH+OUTLINE_BLOCKS]:
-                    self.border[(x,y)] = Block(randomColor(),[x,y])
+                    #self.border[(x,y)] = Block(randomColor(),[x,y])
                     #self.border[(x,y)] = Block([255,255,255],[x,y])
                     #self.border[(x,y)] = Block([0,0,0],[x,y],[255,255,255])
+                    pass
+
+    def changeBorderColor(self):
+        for block in self.border:
+            self.border[block].changeColor(randomColor())
+    
+    def changeActiveColor(self):
+        for block in self.active:
+            self.active[block].changeColor(randomColor())
     
     def clearBoard(self):
         self.active.clear()
@@ -310,7 +325,8 @@ class Tetris():
         self.animateShape()
     
     def creatNewShape(self):
-        whichBlock = Tetris.SHAPES[random.randrange(0,len(Tetris.SHAPES))]
+        #whichBlock = Tetris.SHAPES[random.randrange(0,len(Tetris.SHAPES))]
+        whichBlock = I_Shape
         print('Creating Shape...',whichBlock)
         newBlock = whichBlock([int((BOARD_WIDTH+2)/2),OUTLINE_BLOCKS])
         return newBlock
@@ -371,7 +387,7 @@ game = Tetris(screen)
 pygame.key.set_repeat(200,50)
 
 while gameActive:
-    screen.fill(randomColor())
+    screen.fill(BG_COLOR)
     pygame.event.pump()
     msElapsed = clock.tick(60)
     #print(msElapsed)
@@ -398,6 +414,10 @@ while gameActive:
                 #game.moveCurrentShape('Up')
             if event.key == K_SPACE:
                 game.moveCurrentShape('Space')
+            if event.key == K_c:
+                game.gameBoard.changeBorderColor()
+            if event.key == K_v:
+                game.gameBoard.changeActiveColor()
 
     game.drawPieces()
 
